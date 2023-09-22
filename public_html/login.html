@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="post" action="login.php">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <!-- Forgot Password Section -->
+    <div id="forgotPassword" style="display: none;">
+        <h2>Forgot Password</h2>
+        <form method="post" action="../includes/forgot_password.php">
+            <label for="security_question">Security Question:</label>
+           <select id="security_question" name="security_question">
+			<?php
+				// Include your database connection
+				require_once('../includes/db_connection.php');
+
+				// Query to fetch security questions
+				$query = "SELECT security_question FROM security_questions";
+				$result = mysqli_query($connection, $query);
+				echo "123";
+
+				if ($result) {
+					while ($row = mysqli_fetch_assoc($result)) {
+						echo '<option value="' . $row['security_question'] . '">' . $row['security_question'] . '</option>';
+					}
+					mysqli_free_result($result);
+				} else {
+					echo '<option>Error fetching security questions: ' . mysqli_error($connection) . '</option>';
+				}
+
+				// Close the database connection
+				mysqli_close($connection);
+			?>
+		</select>
+            <br>
+
+            <label for="security_answer">Answer:</label>
+            <input type="text" id="security_answer" name="security_answer" required>
+            <br>
+
+            <input type="submit" value="Reset Password">
+        </form>
+    </div>
+
+    <!-- Button to toggle the "Forgot Password" section -->
+    <button id="forgotPasswordButton" onclick="toggleForgotPassword()">Forgot Password?</button>
+
+    <script>
+        function toggleForgotPassword() {
+            var forgotPasswordDiv = document.getElementById('forgotPassword');
+            var forgotPasswordButton = document.getElementById('forgotPasswordButton');
+            
+            if (forgotPasswordDiv.style.display === 'none') {
+                forgotPasswordDiv.style.display = 'block';
+                forgotPasswordButton.textContent = 'Cancel';
+            } else {
+                forgotPasswordDiv.style.display = 'none';
+                forgotPasswordButton.textContent = 'Forgot Password?';
+            }
+        }
+    </script>
+</body>
+</html>
